@@ -12,12 +12,14 @@ import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 $(document).foundation();
 require('style!css!sass!applicationStyles');
 
+/*
 ReactDOM.render(
 	<div>
 	<p>Boilerplate 3 project</p>
 	</div>, 
 	document.getElementById("element")
 );
+*/
 
 //require("./redux-example.jsx");
 require("./redux-todo-example.jsx")
