@@ -3,17 +3,26 @@ var redux = require('redux');
 var stateDefault = {searchText: "", showCompleted: false, todos: []}
 var reducer = (state = stateDefault, action)=>{
 	//state = state || {state: 'anon'}
-	return state;
+
+	switch(action.type){
+		case "CHANGE_SEARCH_TEXT":
+		return {
+			...state,
+			searchText: action.searchText
+		}
+		default:
+			return state;
+	}
 }
 var store = redux.createStore(reducer);
 
 var currentState = store.getState();
 console.log("searchState", currentState);
 
-function tester(obj){
-	return {...obj, dude: "tester"};
-}
+store.dispatch({
+	type: "CHANGE_SEARCH_TEXT",
+	searchText: "text"
+});
 
-var xxx = tester({name: "me"});
+console.log("searchText should be text", store.getState());
 
-console.log(xxx);
