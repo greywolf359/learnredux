@@ -3,7 +3,16 @@ var redux = require('redux');
 
 console.log("Starting redux example");
 
-var reducer = (state = {name: "anon"}, action)=>{
+
+var stateDefault = {
+	name: "anon",
+	hobbies: [],
+	movies: []
+}
+var nextHobbyId = 1;
+var nextMovieId = 1;
+
+var reducer = (state = stateDefault, action)=>{
 	//state = state || {state: 'anon'}
 	//console.log("new action", action);
 	switch(action.type){
@@ -11,6 +20,39 @@ var reducer = (state = {name: "anon"}, action)=>{
 			return{...state,
 				name: action.name
 			};
+		case 'ADD_HOBBY':
+			return{...state,
+				hobbies: [
+					...state.hobbies,
+					{
+						id: nextHobbyId++,
+						hobby: action.hobby
+					}
+				]
+			};
+
+		case 'REMOVE_HOBBY':
+			return{
+				...state,
+				hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
+			}
+		case 'ADD_MOVIE':
+			return {
+				...state,
+				movies:[
+					...state.movies,
+					{
+						id: nextMovieId++,
+						title: action.title,
+						genre: action.genre
+					}
+				]
+			}
+		case 'REMOVE_MOVIE':
+			return{
+				...state,
+				movies: state.movies.filter((movie)=> movie.id !== action.id)
+			}
 		default:
 			return state;
 	}
@@ -21,7 +63,7 @@ var store = redux.createStore(reducer, redux.compose(
 //subscribe to changes
 var unsubscribe = store.subscribe(()=>{
 	var state = store.getState();
-	console.log("name is ", state.name);
+	console.log("name is ", state);
 
 	document.getElementById('element').innerHTML = state.name
 });
@@ -35,7 +77,20 @@ store.dispatch({
 	name: "tom"
 });
 
+store.dispatch({
+	type: 'ADD_HOBBY',
+	hobby: 'running'
+});
 
+store.dispatch({
+	type: 'ADD_HOBBY',
+	hobby: 'walking'
+});
+
+store.dispatch({
+	type: 'REMOVE_HOBBY',
+	id: 2
+})
 
 store.dispatch({
 	type: 'CHANGE_NAME',
@@ -43,9 +98,25 @@ store.dispatch({
 });
 
 store.dispatch({
-	type: 'CHANGE_NAME',
-	name: "george"
+	type: "ADD_MOVIE",
+	title: "star wars",
+	genre: "sci-fi"
+	
 });
+
+store.dispatch({
+	type: "ADD_MOVIE",
+	title: "the jungle book",
+	genre: "fantasy"
+	
+})
+
+store.dispatch({
+	type: "REMOVE_MOVIE",
+	id: 1
+})
+
+
 
 /*
 1.  create a store from the redux library
