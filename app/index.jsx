@@ -19,7 +19,8 @@ ReactDOM.render(
 	document.getElementById("element")
 );
 
-require("./redux-example");
+//require("./redux-example.jsx");
+require("./redux-todo-example.jsx")
 
 /*
 this route is the main component the nested routes will render

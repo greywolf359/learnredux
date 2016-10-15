@@ -26,7 +26,7 @@ module.exports = {
 						test: /\.jsx?$/,
 						loader: 'babel-loader',
 						exclude: /(node_modules|bower_components)/,
-						query: {presets: ['es2015', 'react']}	
+						query: {presets: ['es2015', 'react', 'stage-0']}	
 					},
 					//{ test: /\.css$/, loader: "style!css" },
 					//{loader: 'script-loader'}
