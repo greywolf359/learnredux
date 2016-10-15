@@ -19,6 +19,8 @@ ReactDOM.render(
 	document.getElementById("element")
 );
 
+require("./redux-example");
+
 /*
 this route is the main component the nested routes will render
 depending on which path is active. if there is no valid path,
