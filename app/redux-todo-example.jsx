@@ -35,6 +35,7 @@ var unsubscribe = store.subscribe(()=>{
 var currentState = store.getState();
 console.log("searchState", currentState);
 
+//dispatching actions
 store.dispatch({
 	type: "CHANGE_SEARCH_TEXT",
 	searchText: "text"
