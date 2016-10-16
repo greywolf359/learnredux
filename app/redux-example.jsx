@@ -1,4 +1,5 @@
 var redux = require('redux');
+var axios = require('axios');
 
 
 console.log("Starting redux example");
@@ -94,6 +95,7 @@ var hobbiesReducer = (state = [], action) =>{
 	}
 }
 
+//action generators for hobbies
 var addHobby = (hobby) =>{
 	return {
 		type: 'ADD_HOBBY',
@@ -126,15 +128,13 @@ var moviesReducer = (state = [], action)=>{
 		default: return state;
 	}
 }
-
-
+//action generators for movies
 var addMovie = (movie) =>{
 	return {
 		type: 'ADD_MOVIE',
 		movie
 	}
 }
-
 var removeMovie = (id) =>{
 	return {
 		type: 'REMOVE_MOVIE',
@@ -142,10 +142,48 @@ var removeMovie = (id) =>{
 	}
 }
 
+//map reducer
+//------------------------------------------------
+
+var mapReducer = (state = {isFetching: false, url: undefined}, action)=>{
+	switch(action.type){
+		case 'START_LOCATION_FETCH':
+			return {
+				isFetching: true,
+				url: undefined
+			}
+		case 'COMPLETE_LOCATION_FETCH':
+			return {
+				isFetching: false,
+				url: action.url
+			}
+		default: return state;
+	}
+}
+
+var startLocationFetch = ()=>{
+	return {type: 'START_LOCATION_FETCH'}
+}
+
+var completeLocationFetch = (url)=>{
+	return {type: 'COMPLETE_LOCATION_FETCH', url}
+}
+
+var fetchLocation = ()=>{
+	store.dispatch(startLocationFetch());
+	axios.get('http://ipinfo.io').then(function(res){
+		var loc = res.data.loc;
+		var baseUrl = 'http://maps.google.com/?q='
+		store.dispatch(completeLocationFetch(baseUrl + loc));
+	})
+}
+
+
 var reducer = redux.combineReducers({
 	name: nameReducer,
 	hobbies: hobbiesReducer,
-	movies: moviesReducer
+	movies: moviesReducer,
+	map: mapReducer
 })
 
 var store = redux.createStore(reducer, redux.compose(
@@ -157,13 +195,18 @@ var unsubscribe = store.subscribe(()=>{
 	var state = store.getState();
 	console.log("name is ", state);
 
-	document.getElementById('element').innerHTML = state.name
+	if(state.map.isFetching){
+		document.getElementById('element').innerHTML = "Loading...";
+	}else if(state.map.url){
+		document.getElementById('element').innerHTML = `<a href = "${state.map.url}" target = "_blank">View Your Location</a>`
+	}
 });
+
 
 //unsubscribe();
 var currentState = store.getState();
 console.log("currentState", currentState);
-
+fetchLocation();
 store.dispatch(changeName("tom"));
 
 store.dispatch(addHobby("running"));
@@ -180,14 +223,3 @@ store.dispatch(addMovie({
 }));
 store.dispatch(removeMovie(1));
 
-/*
-1.  create a store from the redux library
-2.  create a reducer assigned to an anon function or arrow function
-3.  pass state and action to the function
-	- assign defaults to the object passed into state
-	- use a switch statement to update any state properties that is passed via action
-4.  pass the reducer to the store when it is created
-5.  to get the current state of the store use the method getState()
-6.  to pass a new state prop value use dispatch method to pass an object consisting of 
-	type and value props 
-*/
