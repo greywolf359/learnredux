@@ -9,8 +9,7 @@ var stateDefault = {
 	hobbies: [],
 	movies: []
 }
-var nextHobbyId = 1;
-var nextMovieId = 1;
+
 /* OLD CODE
 var oldReducer = (state = stateDefault, action)=>{
 	//state = state || {state: 'anon'}
@@ -59,6 +58,8 @@ var oldReducer = (state = stateDefault, action)=>{
 }
 */
 
+//names reducer
+//--------------------------------------------------
 var nameReducer = (state = "anonymous", action)=>{
 	switch(action.type){
 		case 'CHANGE_NAME':
@@ -67,6 +68,16 @@ var nameReducer = (state = "anonymous", action)=>{
 	}
 }
 
+var changeName = (name) =>{
+	return  {
+		type: 'CHANGE_NAME',
+		name
+	}
+}
+
+//hobbies reducer
+//------------------------------------------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) =>{
 	switch(action.type){
 		case 'ADD_HOBBY':
@@ -83,6 +94,23 @@ var hobbiesReducer = (state = [], action) =>{
 	}
 }
 
+var addHobby = (hobby) =>{
+	return {
+		type: 'ADD_HOBBY',
+		hobby
+	}
+}
+
+var removeHobby = (id) =>{
+	return {
+		type: 'REMOVE_HOBBY',
+		id
+	}
+}
+
+//movies reducer
+//------------------------------------------------
+var nextMovieId = 1;
 var moviesReducer = (state = [], action)=>{
 	switch(action.type){
 		case 'ADD_MOVIE':
@@ -96,6 +124,21 @@ var moviesReducer = (state = [], action)=>{
 		case 'REMOVE_MOVIE':
 			return state.filter((movie) => movie.id !== action.id);
 		default: return state;
+	}
+}
+
+
+var addMovie = (movie) =>{
+	return {
+		type: 'ADD_MOVIE',
+		movie
+	}
+}
+
+var removeMovie = (id) =>{
+	return {
+		type: 'REMOVE_MOVIE',
+		id
 	}
 }
 
@@ -121,51 +164,21 @@ var unsubscribe = store.subscribe(()=>{
 var currentState = store.getState();
 console.log("currentState", currentState);
 
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: "tom"
-});
+store.dispatch(changeName("tom"));
 
-store.dispatch({
-	type: 'ADD_HOBBY',
-	hobby: 'running'
-});
-
-store.dispatch({
-	type: 'ADD_HOBBY',
-	hobby: 'walking'
-});
-
-store.dispatch({
-	type: 'REMOVE_HOBBY',
-	id: 2
-})
-
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: "jane"
-});
-
-store.dispatch({
-	type: "ADD_MOVIE",
+store.dispatch(addHobby("running"));
+store.dispatch(addHobby("walking"));
+store.dispatch(removeHobby(1));
+store.dispatch(changeName("amy"));
+store.dispatch(addMovie({
 	title: "star wars",
 	genre: "sci-fi"
-	
-});
-
-store.dispatch({
-	type: "ADD_MOVIE",
+}));
+store.dispatch(addMovie({
 	title: "the jungle book",
-	genre: "fantasy"
-	
-})
-
-store.dispatch({
-	type: "REMOVE_MOVIE",
-	id: 1
-})
-
-
+	genre: "fantasy"	
+}));
+store.dispatch(removeMovie(1));
 
 /*
 1.  create a store from the redux library
